@@ -1,3 +1,4 @@
+import { FilterBar } from "../components/FilterBar";
 import { Header } from "../components/Header";
 
 export default function Home() {
@@ -9,7 +10,9 @@ export default function Home() {
         textButton="Nova Tarefa"
       />
 
-      <main></main>
+      <main>
+        <FilterBar textSearch="Buscar tarefas..." />
+      </main>
     </>
   );
 }
