@@ -1,7 +1,15 @@
+import { Header } from "../components/Header";
+
 export default function Home() {
   return (
-    <div>
-      <h1 className="text-red-500">Desafio Stoix</h1>
-    </div>
+    <>
+      <Header
+        title="Minhas Tarefas"
+        subtitle="Organize suas atividades de forma eficiente"
+        textButton="Nova Tarefa"
+      />
+
+      <main></main>
+    </>
   );
 }
