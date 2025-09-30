@@ -26,9 +26,18 @@ app.use(
 const csrfProtection = csurf({ cookie: true });
 
 app.use(csrfProtection);
+
 app.use((req, res, next) => {
   res.locals.csrfToken = req.csrfToken();
   next();
+});
+app.use((err: any, _req: any, res: any, next: any) => {
+  if (err.code === "EBADCSRFTOKEN") {
+    return res.status(403).json({
+      message: "Requisição rejeitada: token CSRF inválido ou ausente",
+    });
+  }
+  next(err);
 });
 
 app.use(routes);

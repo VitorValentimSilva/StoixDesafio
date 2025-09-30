@@ -24,4 +24,32 @@ export class TaskController {
       res.status(500).json({ error: "Erro ao criar tarefa" });
     }
   }
+
+  async update(req: Request, res: Response) {
+    try {
+      const { id } = req.params;
+      const { title, description, status } = req.body;
+
+      const task = await taskService.updateTask(Number(id), {
+        title,
+        description,
+        status,
+      });
+
+      res.json(task);
+    } catch (error) {
+      res.status(500).json({ error: "Erro ao atualizar tarefa" });
+    }
+  }
+
+  async delete(req: Request, res: Response) {
+    try {
+      const { id } = req.params;
+      const task = await taskService.deleteTask(Number(id));
+
+      res.json(task);
+    } catch (error) {
+      res.status(500).json({ error: "Erro ao excluir tarefa" });
+    }
+  }
 }
