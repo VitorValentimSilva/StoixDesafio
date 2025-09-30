@@ -21,15 +21,60 @@ const taskSwagger = {
             description: "Nenhuma tarefa encontrada",
             content: {
               "application/json": {
-                schema: {
-                  type: "object",
-                  properties: {
-                    message: {
-                      type: "string",
-                      example: "Nenhuma tarefa cadastrada",
-                    },
+                schema: { $ref: "#/components/schemas/ErrorResponse" },
+              },
+            },
+          },
+          "500": {
+            description: "Erro interno do servidor",
+            content: {
+              "application/json": {
+                schema: { $ref: "#/components/schemas/ErrorResponse" },
+              },
+            },
+          },
+        },
+      },
+      post: {
+        summary: "Cria uma nova tarefa",
+        description: "Cria uma tarefa com título e descrição opcional.",
+        tags: ["Tarefa"],
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: { $ref: "#/components/schemas/TaskCreate" },
+              examples: {
+                exemplo1: {
+                  summary: "Exemplo de criação de tarefa",
+                  value: {
+                    title: "Comprar mantimentos",
+                    description: "Leite, pão e ovos",
                   },
-                  required: ["message"],
+                },
+              },
+            },
+          },
+        },
+        responses: {
+          "201": {
+            description: "Tarefa criada com sucesso",
+            content: {
+              "application/json": {
+                schema: { $ref: "#/components/schemas/Task" },
+              },
+            },
+          },
+          "400": {
+            description: "Dados inválidos",
+            content: {
+              "application/json": {
+                schema: { $ref: "#/components/schemas/ErrorResponse" },
+                examples: {
+                  exemplo1: {
+                    summary: "Exemplo de erro de validação",
+                    value: { message: "Título é obrigatório" },
+                  },
                 },
               },
             },
@@ -38,20 +83,12 @@ const taskSwagger = {
             description: "Erro interno do servidor",
             content: {
               "application/json": {
-                schema: {
-                  type: "object",
-                  properties: {
-                    message: {
-                      type: "string",
-                      example: "Erro interno do servidor",
-                    },
-                  },
-                  required: ["message"],
-                },
+                schema: { $ref: "#/components/schemas/ErrorResponse" },
               },
             },
           },
         },
+        security: [{ csrfAuth: [] }],
       },
     },
   },
@@ -84,6 +121,28 @@ const taskSwagger = {
           },
         },
         required: ["id", "title", "status", "createdAt", "updatedAt"],
+      },
+      TaskCreate: {
+        type: "object",
+        properties: {
+          title: { type: "string", example: "Comprar mantimentos" },
+          description: {
+            type: "string",
+            nullable: true,
+            example: "Leite, pão e ovos",
+          },
+        },
+        required: ["title"],
+      },
+      ErrorResponse: {
+        type: "object",
+        properties: {
+          message: {
+            type: "string",
+            example: "Erro ao processar a requisição",
+          },
+        },
+        required: ["message"],
       },
     },
   },

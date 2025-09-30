@@ -1,6 +1,7 @@
 import swaggerUi from "swagger-ui-express";
 import { Express } from "express";
 import taskSwagger from "../swagger/task.swagger";
+import csrfSwagger from "../swagger/csrf.swagger";
 
 const swaggerSpec = {
   openapi: "3.0.0",
@@ -10,9 +11,30 @@ const swaggerSpec = {
     description: "Desenvolvimento de um Sistema de Gerenciamento de Tarefas",
   },
   servers: [{ url: "http://localhost:3000" }],
-  paths: { ...taskSwagger.paths },
-  components: { ...taskSwagger.components },
-  tags: [...taskSwagger.tags],
+  paths: {
+    ...taskSwagger.paths,
+    ...csrfSwagger.paths,
+  },
+  components: {
+    schemas: {
+      ...taskSwagger.components?.schemas,
+      ...csrfSwagger.components?.schemas,
+    },
+    securitySchemes: {
+      csrfAuth: {
+        type: "apiKey",
+        in: "header",
+        name: "X-CSRF-Token",
+        description: "Token CSRF necessário para requisições POST/PUT/DELETE",
+      },
+    },
+  },
+  security: [
+    {
+      csrfAuth: [],
+    },
+  ],
+  tags: [...taskSwagger.tags, ...csrfSwagger.tags],
 };
 
 export const swaggerDocs = (app: Express, port: number) => {
