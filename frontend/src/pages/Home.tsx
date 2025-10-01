@@ -15,6 +15,8 @@ export default function Home() {
     setSort,
     filter,
     setFilter,
+    search,
+    setSearch,
     createTask,
     updateTask,
     deleteTask,
@@ -28,6 +30,11 @@ export default function Home() {
     if (filter === "completed") return t.status === "DONE";
     return true;
   });
+
+  const sortedTasks =
+    sort === "alphabetical"
+      ? [...filteredTasks].sort((a, b) => a.title.localeCompare(b.title))
+      : filteredTasks;
 
   const handleOpenNew = () => {
     setEditingTask(null);
@@ -73,11 +80,13 @@ export default function Home() {
           onFilterChange={setFilter}
           activeSort={sort}
           onSortChange={setSort}
+          search={search}
+          onSearchChange={setSearch}
           tasks={tasks}
         />
 
         <TaskList
-          tasks={filteredTasks}
+          tasks={sortedTasks}
           loading={loading}
           error={error}
           onEditTask={handleOpenEdit}

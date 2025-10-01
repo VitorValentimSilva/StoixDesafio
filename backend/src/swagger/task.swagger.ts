@@ -4,7 +4,7 @@ const taskSwagger = {
       get: {
         summary: "Retorna todas as tarefas cadastradas",
         description:
-          "Retorna uma lista completa com os dados das tarefas. É possível ordenar os resultados passando o parâmetro `sort`. E também é possível filtrar pelo status da tarefa com o parâmetro `filter`.",
+          "Retorna uma lista completa com os dados das tarefas. É possível ordenar os resultados passando o parâmetro `sort`, filtrar pelo status da tarefa com `filter` e buscar por título com `search`.",
         tags: ["Tarefa"],
         parameters: [
           {
@@ -29,6 +29,17 @@ const taskSwagger = {
               type: "string",
               enum: ["all", "pending", "in_progress", "done"],
               example: "pending",
+            },
+          },
+          {
+            name: "search",
+            in: "query",
+            description:
+              "Texto para busca no título da tarefa. A pesquisa é case-insensitive e pode ser combinada com `sort` e `filter`.",
+            required: false,
+            schema: {
+              type: "string",
+              example: "comprar",
             },
           },
         ],

@@ -1,5 +1,5 @@
 export type FilterType = "all" | "pending" | "in_progress" | "completed";
-export type SortType = "newest" | "oldest" | "alphabetical";
+export type SortType = "recent" | "oldest" | "alphabetical";
 
 export interface Task {
   id: number;
@@ -18,7 +18,7 @@ export const FILTER_BACKEND_MAP: Record<FilterType, string> = {
 };
 
 export const SORT_BACKEND_MAP: Record<SortType, string> = {
-  newest: "recent",
+  recent: "recent",
   oldest: "oldest",
   alphabetical: "az",
 };

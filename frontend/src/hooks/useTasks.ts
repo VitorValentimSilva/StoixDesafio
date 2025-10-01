@@ -9,7 +9,7 @@ import {
 } from "../types/task";
 
 export function useTasks(
-  initialSort: SortType = "newest",
+  initialSort: SortType = "recent",
   initialFilter: FilterType = "all"
 ) {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -17,19 +17,20 @@ export function useTasks(
   const [error, setError] = useState<string | null>(null);
   const [sort, setSort] = useState<SortType>(initialSort);
   const [filter, setFilter] = useState<FilterType>(initialFilter);
+  const [search, setSearch] = useState<string>(""); // ✅ novo
 
   const fetchTasks = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
-      const data = await taskService.getTasks();
+      const data = await taskService.getTasks(sort, filter, search);
       setTasks(data);
     } catch (err: unknown) {
       setError((err as Error)?.message ?? "Erro ao buscar tarefas");
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [sort, filter, search]); // ✅ dependências
 
   useEffect(() => {
     void fetchTasks();
@@ -73,6 +74,8 @@ export function useTasks(
     setSort,
     filter,
     setFilter,
+    search,
+    setSearch,
     fetchTasks,
     createTask,
     updateTask,

@@ -6,10 +6,12 @@ const taskService = new TaskService();
 export class TaskController {
   async list(req: Request, res: Response) {
     try {
-      const { sort, filter } = req.query;
+      const { sort, filter, search } = req.query;
+
       const tasks = await taskService.getTasks(
         sort as string,
-        filter as string
+        filter as string,
+        search as string
       );
 
       res.json(tasks);

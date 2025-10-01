@@ -13,6 +13,8 @@ interface FilterBarProps {
   onFilterChange: (value: FilterType) => void;
   activeSort: SortType;
   onSortChange: (value: SortType) => void;
+  search: string;
+  onSearchChange: (value: string) => void;
   tasks: Task[];
 }
 
@@ -28,7 +30,7 @@ const filterButtons = [
 ];
 
 const sortOptions = [
-  { value: "newest" as SortType, label: "Mais Recentes" },
+  { value: "recent" as SortType, label: "Mais Recentes" },
   { value: "oldest" as SortType, label: "Mais Antigas" },
   { value: "alphabetical" as SortType, label: "A-Z" },
 ];
@@ -39,6 +41,8 @@ export function FilterBar({
   onFilterChange,
   activeSort,
   onSortChange,
+  search,
+  onSearchChange,
   tasks,
 }: FilterBarProps) {
   const counts = tasks.reduce(
@@ -60,6 +64,8 @@ export function FilterBar({
         <input
           type="text"
           placeholder={textSearch}
+          value={search}
+          onChange={(e) => onSearchChange(e.target.value)}
           className="w-full pl-12 pr-4 py-3 rounded-2xl border-2 border-slate-200 bg-white focus:border-blue-500 
           outline-none transition-all duration-200 text-slate-700 placeholder:text-slate-400"
         />

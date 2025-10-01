@@ -2,11 +2,16 @@ import type { CreateTaskInput, Task, UpdateTaskInput } from "../types/task";
 import tokenService from "./tokenService";
 
 export const taskService = {
-  getTasks: async (sort?: string, filter?: string): Promise<Task[]> => {
+  getTasks: async (
+    sort?: string,
+    filter?: string,
+    search?: string
+  ): Promise<Task[]> => {
     const params: Record<string, string> = {};
-    
+
     if (sort) params.sort = sort;
     if (filter) params.filter = filter;
+    if (search) params.search = search;
 
     const { data } = await tokenService.get<Task[]>("/task", { params });
     return data;

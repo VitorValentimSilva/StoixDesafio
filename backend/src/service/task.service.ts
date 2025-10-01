@@ -3,10 +3,12 @@ import { PrismaClient, Task } from "../generated/prisma";
 const prisma = new PrismaClient();
 
 export class TaskService {
-  async getTasks(sort?: string, filter?: string): Promise<Task[]> {
-    let orderBy = {};
-    let where = {};
-
+  async getTasks(
+    sort?: string,
+    filter?: string,
+    search?: string
+  ): Promise<Task[]> {
+    let orderBy: any = {};
     switch (sort) {
       case "recent":
         orderBy = { createdAt: "desc" };
@@ -22,19 +24,26 @@ export class TaskService {
         break;
     }
 
-    switch (filter) {
-      case "pending":
-        where = { status: "PENDING" };
-        break;
-      case "in_progress":
-        where = { status: "IN_PROGRESS" };
-        break;
-      case "done":
-        where = { status: "DONE" };
-        break;
-      default:
-        where = {};
-        break;
+    let where: any = {};
+    if (filter) {
+      switch (filter) {
+        case "pending":
+          where.status = "PENDING";
+          break;
+        case "in_progress":
+          where.status = "IN_PROGRESS";
+          break;
+        case "done":
+          where.status = "DONE";
+          break;
+      }
+    }
+
+    if (search) {
+      where.title = {
+        contains: search,
+        mode: "insensitive",
+      };
     }
 
     return prisma.task.findMany({
