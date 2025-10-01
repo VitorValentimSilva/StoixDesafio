@@ -14,7 +14,7 @@ export default function Home() {
       <main>
         <FilterBar textSearch="Buscar tarefas..." />
 
-        <TaskList />
+        <TaskList filter="" sort="" />
       </main>
     </>
   );

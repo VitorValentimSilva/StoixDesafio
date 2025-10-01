@@ -3,8 +3,16 @@ import routes from "./routes";
 import cookieParser from "cookie-parser";
 import session from "express-session";
 import csurf from "csurf";
+import cors from "cors";
 
 const app = express();
+
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
 
 app.use(express.json());
 app.use(cookieParser());
