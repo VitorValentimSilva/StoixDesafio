@@ -140,11 +140,11 @@ export function TaskForm({ task, onCancel, onSubmit }: TaskFormProps) {
                 value={status}
                 onChange={(e) => setStatus(e.target.value as Task["status"])}
                 className="w-full px-4 py-3 rounded-xl border-2 border-slate-200 bg-slate-50
-                  focus:border-blue-500 focus:bg-white outline-none transition-all duration-200 cursor-pointer"
+              focus:border-blue-500 focus:bg-white outline-none transition-all duration-200 cursor-pointer"
               >
-                <option value="pending">Pendente</option>
-                <option value="in_progress">Em Progresso</option>
-                <option value="completed">Concluída</option>
+                <option value="PENDING">Pendente</option>
+                <option value="IN_PROGRESS">Em Progresso</option>
+                <option value="DONE">Concluída</option>
               </select>
             </div>
           )}

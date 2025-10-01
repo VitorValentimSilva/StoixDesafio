@@ -69,7 +69,7 @@ export function TaskCard({
           <div className="flex gap-2">
             <button
               onClick={() => onEdit?.(task)}
-              className="p-2 rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200
+              className="p-2 rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer
                 hover:text-slate-800 transition-all duration-200 hover:scale-110"
               title="Editar tarefa"
             >
@@ -78,7 +78,7 @@ export function TaskCard({
 
             <button
               onClick={() => onDelete?.(task.id)}
-              className="p-2 rounded-xl bg-red-50 text-red-600 hover:bg-red-100
+              className="p-2 rounded-xl bg-red-50 text-red-600 hover:bg-red-100 cursor-pointer
                 hover:text-red-700 transition-all duration-200 hover:scale-110"
               title="Excluir tarefa"
             >
