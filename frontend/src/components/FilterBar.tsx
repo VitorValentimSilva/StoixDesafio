@@ -35,6 +35,7 @@ export function FilterBar({ textSearch }: FilterBarProps) {
     <section className="w-5/6 mx-auto mt-6">
       <div className="relative">
         <IoIosSearch className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+        
         <input
           type="text"
           placeholder={textSearch}

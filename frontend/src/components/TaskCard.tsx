@@ -1,6 +1,7 @@
 import { FiClock, FiEdit2, FiTrash2 } from "react-icons/fi";
 import type { Task } from "../types/task";
 import { FaRegCheckCircle, FaRegCircle } from "react-icons/fa";
+import { motion } from "framer-motion";
 
 interface TaskCardProps {
   task: Task;
@@ -35,8 +36,11 @@ export function TaskCard({ task }: TaskCardProps) {
   const StatusIcon = config.icon;
 
   return (
-    <div
-      className={`task-card group relative bg-white rounded-2xl p-6 shadow-sm border-2 ${config.border}
+    <motion.div
+      initial={{ x: 50, opacity: 0 }}
+      animate={{ x: 0, opacity: 1 }}
+      transition={{ duration: 0.4, ease: "easeOut" }}
+      className={`relative bg-white rounded-2xl p-6 shadow-sm border-2 ${config.border}
         hover:shadow-xl hover:-translate-y-1 transition-all duration-300 ease-out`}
     >
       <div
@@ -94,12 +98,12 @@ export function TaskCard({ task }: TaskCardProps) {
           >
             {config.label}
           </span>
-          
+
           <span className="text-xs text-slate-400">
             {task.createdAt.slice(0, 10).split("-").reverse().join("/")}
           </span>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }

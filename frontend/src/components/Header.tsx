@@ -18,6 +18,7 @@ export function Header({ title, subtitle, textButton }: HeaderProps) {
           <h1 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent">
             {title}
           </h1>
+
           <p className="text-slate-600 mt-1 text-sm sm:text-base">{subtitle}</p>
         </div>
       </div>
@@ -28,6 +29,7 @@ export function Header({ title, subtitle, textButton }: HeaderProps) {
         text-white font-semibold hover:from-blue-600 hover:to-cyan-600 transition-all duration-200 hover:scale-105 shadow-lg hover:shadow-xl cursor-pointer"
         >
           <FiPlus className="w-5 h-5" />
+          
           {textButton}
         </button>
       </div>

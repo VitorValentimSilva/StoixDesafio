@@ -1,4 +1,5 @@
 import { useTasks } from "../hooks/useTasks";
+import { AllCompletedTask } from "./AllCompletedTask";
 import { Loading } from "./Loading";
 import { NoTasks } from "./NoTasks";
 import { TaskCard } from "./TaskCard";
@@ -12,7 +13,11 @@ export function TaskList({ sort, filter }: TaskListProps) {
   const { tasks, loading, error } = useTasks(sort, filter);
 
   if (loading) {
-    return <Loading />;
+    return (
+      <div className="w-5/6 m-auto my-6">
+        <Loading />
+      </div>
+    );
   }
 
   if (error) {
@@ -29,6 +34,17 @@ export function TaskList({ sort, filter }: TaskListProps) {
         title="Nenhuma tarefa encontrada"
         message="Comece criando uma nova tarefa para organizar suas atividades!"
       />
+    );
+  }
+
+  if (tasks.every((task) => task.status === "DONE")) {
+    return (
+      <div className="w-5/6 m-auto mt-6">
+        <AllCompletedTask
+          title="Parabéns!"
+          message="Todas as suas tarefas foram concluídas!"
+        />
+      </div>
     );
   }
 
