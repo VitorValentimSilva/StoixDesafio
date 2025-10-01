@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { IoIosSearch } from "react-icons/io";
 import { ButtonStatus } from "./ButtonStatus";
 import { CiClock2 } from "react-icons/ci";
@@ -5,12 +6,15 @@ import { GoCheckCircle, GoCircle } from "react-icons/go";
 import { LuFilter } from "react-icons/lu";
 import { VscListOrdered } from "react-icons/vsc";
 import { ButtonSort } from "./ButtonSort";
-
-export type FilterType = "all" | "pending" | "in_progress" | "completed";
-export type SortType = "newest" | "oldest" | "alphabetical";
+import { taskService } from "../api/taskService";
+import type { FilterType, SortType } from "../types/task";
 
 interface FilterBarProps {
   textSearch: string;
+  activeFilter: FilterType;
+  onFilterChange: (value: FilterType) => void;
+  activeSort: SortType;
+  onSortChange: (value: SortType) => void;
 }
 
 const filterButtons = [
@@ -30,12 +34,60 @@ const sortOptions = [
   { value: "alphabetical" as SortType, label: "A-Z" },
 ];
 
-export function FilterBar({ textSearch }: FilterBarProps) {
+export function FilterBar({
+  textSearch,
+  activeFilter,
+  onFilterChange,
+  activeSort,
+  onSortChange,
+}: FilterBarProps) {
+  const [counts, setCounts] = useState({
+    all: 0,
+    pending: 0,
+    in_progress: 0,
+    completed: 0,
+  });
+
+  useEffect(() => {
+    let mounted = true;
+    taskService
+      .getTasks()
+      .then((tasks) => {
+        if (!mounted) return;
+        const c = tasks.reduce(
+          (
+            acc: {
+              all: number;
+              pending: number;
+              in_progress: number;
+              completed: number;
+            },
+            t: { status: string }
+          ) => {
+            acc.all++;
+            if (t.status === "PENDING") acc.pending++;
+            else if (t.status === "IN_PROGRESS") acc.in_progress++;
+            else if (t.status === "DONE") acc.completed++;
+            return acc;
+          },
+          { all: 0, pending: 0, in_progress: 0, completed: 0 }
+        );
+        setCounts(c);
+      })
+      .catch(() => {
+        setCounts({ all: 0, pending: 0, in_progress: 0, completed: 0 });
+      });
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
   return (
     <section className="w-5/6 mx-auto mt-6">
       <div className="relative">
         <IoIosSearch className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
-        
+
         <input
           type="text"
           placeholder={textSearch}
@@ -45,15 +97,23 @@ export function FilterBar({ textSearch }: FilterBarProps) {
       </div>
 
       <div className="flex flex-wrap gap-3 mt-6">
-        {filterButtons.map((filter) => (
+        {filterButtons.map((f) => (
           <ButtonStatus
-            key={filter.value}
-            value={filter.value}
-            icon={filter.icon}
-            label={filter.label}
-            isActive={filter.value === "all"}
-            count={5}
-            onFilterChange={() => {}}
+            key={f.value}
+            value={f.value}
+            icon={f.icon}
+            label={f.label}
+            isActive={f.value === activeFilter}
+            count={
+              f.value === "all"
+                ? counts.all
+                : f.value === "pending"
+                ? counts.pending
+                : f.value === "in_progress"
+                ? counts.in_progress
+                : counts.completed
+            }
+            onFilterChange={(v) => onFilterChange(v as FilterType)}
           />
         ))}
       </div>
@@ -66,8 +126,14 @@ export function FilterBar({ textSearch }: FilterBarProps) {
         </div>
 
         <div className="flex gap-2 overflow-x-auto sm:overflow-x-visible">
-          {sortOptions.map((sort) => (
-            <ButtonSort key={sort.value} label={sort.label} isActive={true} />
+          {sortOptions.map((s) => (
+            <ButtonSort
+              key={s.value}
+              value={s.value}
+              label={s.label}
+              isActive={s.value === activeSort}
+              onSortChange={(v) => onSortChange(v as SortType)}
+            />
           ))}
         </div>
       </div>
