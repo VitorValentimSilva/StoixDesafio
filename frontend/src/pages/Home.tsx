@@ -1,5 +1,6 @@
 import { FilterBar } from "../components/FilterBar";
 import { Header } from "../components/Header";
+import { TaskList } from "../components/TaskList";
 
 export default function Home() {
   return (
@@ -12,6 +13,8 @@ export default function Home() {
 
       <main>
         <FilterBar textSearch="Buscar tarefas..." />
+
+        <TaskList />
       </main>
     </>
   );
