@@ -22,6 +22,13 @@ export default function Home() {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingTask, setEditingTask] = useState<Task | null>(null);
 
+  const filteredTasks = tasks.filter((t) => {
+    if (filter === "pending") return t.status === "PENDING";
+    if (filter === "in_progress") return t.status === "IN_PROGRESS";
+    if (filter === "completed") return t.status === "DONE";
+    return true;
+  });
+
   const handleOpenNew = () => {
     setEditingTask(null);
     setIsFormOpen(true);
@@ -66,14 +73,25 @@ export default function Home() {
           onFilterChange={setFilter}
           activeSort={sort}
           onSortChange={setSort}
+          tasks={tasks}
         />
 
         <TaskList
-          tasks={tasks}
+          tasks={filteredTasks}
           loading={loading}
           error={error}
           onEditTask={handleOpenEdit}
           onDeleteTask={deleteTask}
+          onToggleStatus={async (task) => {
+            const nextStatus =
+              task.status === "PENDING"
+                ? "IN_PROGRESS"
+                : task.status === "IN_PROGRESS"
+                ? "DONE"
+                : "PENDING";
+
+            await updateTask(task.id, { status: nextStatus });
+          }}
         />
       </main>
 

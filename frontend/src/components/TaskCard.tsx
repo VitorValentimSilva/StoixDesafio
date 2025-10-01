@@ -7,6 +7,7 @@ interface TaskCardProps {
   task: Task;
   onEdit?: (task: Task) => void;
   onDelete?: (taskId: number) => void;
+  onToggleStatus?: (task: Task) => void;
 }
 
 const statusConfig = {
@@ -33,7 +34,12 @@ const statusConfig = {
   },
 } as const;
 
-export function TaskCard({ task, onEdit, onDelete }: TaskCardProps) {
+export function TaskCard({
+  task,
+  onEdit,
+  onDelete,
+  onToggleStatus,
+}: TaskCardProps) {
   const config = statusConfig[task.status];
   const StatusIcon = config.icon;
 
@@ -53,6 +59,7 @@ export function TaskCard({ task, onEdit, onDelete }: TaskCardProps) {
       <div className="relative">
         <div className="flex items-start justify-between gap-3 mb-3">
           <button
+            onClick={() => onToggleStatus?.(task)}
             className={`flex-shrink-0 p-2 rounded-xl ${config.bg} ${config.color}
               hover:scale-110 transition-transform duration-200 cursor-pointer`}
           >

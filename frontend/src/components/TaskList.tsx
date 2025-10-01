@@ -10,6 +10,7 @@ interface TaskListProps {
   error?: string | null;
   onEditTask?: (task: Task) => void;
   onDeleteTask?: (id: number) => void;
+  onToggleStatus?: (task: Task) => void;
 }
 
 export function TaskList({
@@ -18,6 +19,7 @@ export function TaskList({
   error,
   onEditTask,
   onDeleteTask,
+  onToggleStatus,
 }: TaskListProps) {
   if (loading)
     return (
@@ -41,27 +43,28 @@ export function TaskList({
       />
     );
 
-  if (tasks.every((t) => t.status === "DONE")) {
-    return (
-      <div className="w-5/6 m-auto mt-6">
+  return (
+    <section className="w-5/6 mx-auto mt-6">
+      {tasks.every((t) => t.status === "DONE") && (
         <AllCompletedTask
           title="Parabéns!"
           message="Todas as suas tarefas foram concluídas!"
         />
-      </div>
-    );
-  }
+      )}
 
-  return (
-    <section className="w-5/6 mx-auto mt-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-6">
         {tasks.map((task, index) => (
           <div
             key={task.id}
             className="animate-slide-in"
             style={{ animationDelay: `${index * 50}ms` }}
           >
-            <TaskCard task={task} onEdit={onEditTask} onDelete={onDeleteTask} />
+            <TaskCard
+              task={task}
+              onEdit={onEditTask}
+              onDelete={onDeleteTask}
+              onToggleStatus={onToggleStatus}
+            />
           </div>
         ))}
       </div>

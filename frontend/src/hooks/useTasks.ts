@@ -1,8 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { taskService } from "../api/taskService";
 import {
-  FILTER_BACKEND_MAP,
-  SORT_BACKEND_MAP,
   type CreateTaskInput,
   type FilterType,
   type SortType,
@@ -24,17 +22,14 @@ export function useTasks(
     setLoading(true);
     setError(null);
     try {
-      const data = await taskService.getTasks(
-        SORT_BACKEND_MAP[sort],
-        FILTER_BACKEND_MAP[filter]
-      );
+      const data = await taskService.getTasks();
       setTasks(data);
     } catch (err: unknown) {
       setError((err as Error)?.message ?? "Erro ao buscar tarefas");
     } finally {
       setLoading(false);
     }
-  }, [sort, filter]);
+  }, []);
 
   useEffect(() => {
     void fetchTasks();
@@ -54,9 +49,7 @@ export function useTasks(
     setLoading(true);
     try {
       await taskService.updateTask(id, input);
-      setTasks((prev) =>
-        prev.map((t) => (t.id === id ? { ...t, ...input } : t))
-      );
+      await fetchTasks();
     } finally {
       setLoading(false);
     }

@@ -44,7 +44,7 @@ export function TaskForm({ task, onCancel, onSubmit }: TaskFormProps) {
 
     try {
       setIsSaving(true);
-      onSubmit(title.trim(), description.trim(), status);
+      await onSubmit(title.trim(), description.trim(), status);
     } catch (err) {
       console.error("Erro ao salvar tarefa:", err);
       alert("Ocorreu um erro ao salvar a tarefa.");
@@ -158,7 +158,7 @@ export function TaskForm({ task, onCancel, onSubmit }: TaskFormProps) {
             >
               Cancelar
             </button>
-            
+
             <button
               type="submit"
               className="flex-1 px-6 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-semibold hover:from-blue-600 hover:to-cyan-600 transition-all duration-200 hover:scale-105 shadow-lg hover:shadow-xl disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"

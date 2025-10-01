@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { IoIosSearch } from "react-icons/io";
 import { ButtonStatus } from "./ButtonStatus";
 import { CiClock2 } from "react-icons/ci";
@@ -6,8 +5,7 @@ import { GoCheckCircle, GoCircle } from "react-icons/go";
 import { LuFilter } from "react-icons/lu";
 import { VscListOrdered } from "react-icons/vsc";
 import { ButtonSort } from "./ButtonSort";
-import { taskService } from "../api/taskService";
-import type { FilterType, SortType } from "../types/task";
+import type { FilterType, SortType, Task } from "../types/task";
 
 interface FilterBarProps {
   textSearch: string;
@@ -15,6 +13,7 @@ interface FilterBarProps {
   onFilterChange: (value: FilterType) => void;
   activeSort: SortType;
   onSortChange: (value: SortType) => void;
+  tasks: Task[];
 }
 
 const filterButtons = [
@@ -40,48 +39,18 @@ export function FilterBar({
   onFilterChange,
   activeSort,
   onSortChange,
+  tasks,
 }: FilterBarProps) {
-  const [counts, setCounts] = useState({
-    all: 0,
-    pending: 0,
-    in_progress: 0,
-    completed: 0,
-  });
-
-  useEffect(() => {
-    let mounted = true;
-    taskService
-      .getTasks()
-      .then((tasks) => {
-        if (!mounted) return;
-        const c = tasks.reduce(
-          (
-            acc: {
-              all: number;
-              pending: number;
-              in_progress: number;
-              completed: number;
-            },
-            t: { status: string }
-          ) => {
-            acc.all++;
-            if (t.status === "PENDING") acc.pending++;
-            else if (t.status === "IN_PROGRESS") acc.in_progress++;
-            else if (t.status === "DONE") acc.completed++;
-            return acc;
-          },
-          { all: 0, pending: 0, in_progress: 0, completed: 0 }
-        );
-        setCounts(c);
-      })
-      .catch(() => {
-        setCounts({ all: 0, pending: 0, in_progress: 0, completed: 0 });
-      });
-
-    return () => {
-      mounted = false;
-    };
-  }, []);
+  const counts = tasks.reduce(
+    (acc, t) => {
+      acc.all++;
+      if (t.status === "PENDING") acc.pending++;
+      else if (t.status === "IN_PROGRESS") acc.in_progress++;
+      else if (t.status === "DONE") acc.completed++;
+      return acc;
+    },
+    { all: 0, pending: 0, in_progress: 0, completed: 0 }
+  );
 
   return (
     <section className="w-5/6 mx-auto mt-6">
