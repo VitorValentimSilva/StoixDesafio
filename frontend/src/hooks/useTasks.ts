@@ -1,20 +1,88 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { taskService } from "../api/taskService";
-import type { Task } from "../types/task";
+import {
+  FILTER_BACKEND_MAP,
+  SORT_BACKEND_MAP,
+  type CreateTaskInput,
+  type FilterType,
+  type SortType,
+  type Task,
+  type UpdateTaskInput,
+} from "../types/task";
 
-export function useTasks(sort: string, filter: string) {
+export function useTasks(
+  initialSort: SortType = "newest",
+  initialFilter: FilterType = "all"
+) {
   const [tasks, setTasks] = useState<Task[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [sort, setSort] = useState<SortType>(initialSort);
+  const [filter, setFilter] = useState<FilterType>(initialFilter);
 
-  useEffect(() => {
+  const fetchTasks = useCallback(async () => {
     setLoading(true);
-    taskService
-      .getTasks(sort, filter)
-      .then(setTasks)
-      .catch(() => setError("Erro ao carregar tarefas"))
-      .finally(() => setLoading(false));
+    setError(null);
+    try {
+      const data = await taskService.getTasks(
+        SORT_BACKEND_MAP[sort],
+        FILTER_BACKEND_MAP[filter]
+      );
+      setTasks(data);
+    } catch (err: unknown) {
+      setError((err as Error)?.message ?? "Erro ao buscar tarefas");
+    } finally {
+      setLoading(false);
+    }
   }, [sort, filter]);
 
-  return { tasks, loading, error };
+  useEffect(() => {
+    void fetchTasks();
+  }, [fetchTasks]);
+
+  const createTask = async (input: CreateTaskInput) => {
+    setLoading(true);
+    try {
+      await taskService.createTask(input);
+      await fetchTasks();
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const updateTask = async (id: number, input: UpdateTaskInput) => {
+    setLoading(true);
+    try {
+      await taskService.updateTask(id, input);
+      setTasks((prev) =>
+        prev.map((t) => (t.id === id ? { ...t, ...input } : t))
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const deleteTask = async (id: number) => {
+    setLoading(true);
+    try {
+      await taskService.deleteTask(id);
+      setTasks((prev) => prev.filter((t) => t.id !== id));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return {
+    tasks,
+    loading,
+    error,
+    sort,
+    setSort,
+    filter,
+    setFilter,
+    fetchTasks,
+    createTask,
+    updateTask,
+    deleteTask,
+  } as const;
 }

@@ -5,6 +5,8 @@ import { motion } from "framer-motion";
 
 interface TaskCardProps {
   task: Task;
+  onEdit?: (task: Task) => void;
+  onDelete?: (taskId: number) => void;
 }
 
 const statusConfig = {
@@ -29,9 +31,9 @@ const statusConfig = {
     bg: "bg-emerald-50",
     border: "border-emerald-300",
   },
-};
+} as const;
 
-export function TaskCard({ task }: TaskCardProps) {
+export function TaskCard({ task, onEdit, onDelete }: TaskCardProps) {
   const config = statusConfig[task.status];
   const StatusIcon = config.icon;
 
@@ -59,6 +61,7 @@ export function TaskCard({ task }: TaskCardProps) {
 
           <div className="flex gap-2">
             <button
+              onClick={() => onEdit?.(task)}
               className="p-2 rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200
                 hover:text-slate-800 transition-all duration-200 hover:scale-110"
               title="Editar tarefa"
@@ -67,6 +70,7 @@ export function TaskCard({ task }: TaskCardProps) {
             </button>
 
             <button
+              onClick={() => onDelete?.(task.id)}
               className="p-2 rounded-xl bg-red-50 text-red-600 hover:bg-red-100
                 hover:text-red-700 transition-all duration-200 hover:scale-110"
               title="Excluir tarefa"

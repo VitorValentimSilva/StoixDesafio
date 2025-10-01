@@ -22,3 +22,15 @@ export const SORT_BACKEND_MAP: Record<SortType, string> = {
   oldest: "oldest",
   alphabetical: "az",
 };
+
+export type CreateTaskInput = {
+  title: string;
+  description?: string | null;
+  status?: Task["status"];
+};
+
+export type UpdateTaskInput = {
+  title?: string;
+  description?: string | null;
+  status?: Task["status"];
+};

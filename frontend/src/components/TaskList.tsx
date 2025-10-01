@@ -1,43 +1,47 @@
-import { useTasks } from "../hooks/useTasks";
-import { AllCompletedTask } from "./AllCompletedTask";
+import { TaskCard } from "./TaskCard";
+import type { Task } from "../types/task";
 import { Loading } from "./Loading";
 import { NoTasks } from "./NoTasks";
-import { TaskCard } from "./TaskCard";
+import { AllCompletedTask } from "./AllCompletedTask";
 
 interface TaskListProps {
-  sort: string;
-  filter: string;
+  tasks: Task[];
+  loading?: boolean;
+  error?: string | null;
+  onEditTask?: (task: Task) => void;
+  onDeleteTask?: (id: number) => void;
 }
 
-export function TaskList({ sort, filter }: TaskListProps) {
-  const { tasks, loading, error } = useTasks(sort, filter);
-
-  if (loading) {
+export function TaskList({
+  tasks,
+  loading,
+  error,
+  onEditTask,
+  onDeleteTask,
+}: TaskListProps) {
+  if (loading)
     return (
       <div className="w-5/6 m-auto my-6">
         <Loading />
       </div>
     );
-  }
 
-  if (error) {
+  if (error)
     return (
       <p className="text-2xl font-bold text-center mt-6 text-red-500">
         {error}
       </p>
     );
-  }
 
-  if (tasks.length === 0) {
+  if (!tasks.length)
     return (
       <NoTasks
         title="Nenhuma tarefa encontrada"
         message="Comece criando uma nova tarefa para organizar suas atividades!"
       />
     );
-  }
 
-  if (tasks.every((task) => task.status === "DONE")) {
+  if (tasks.every((t) => t.status === "DONE")) {
     return (
       <div className="w-5/6 m-auto mt-6">
         <AllCompletedTask
@@ -57,7 +61,7 @@ export function TaskList({ sort, filter }: TaskListProps) {
             className="animate-slide-in"
             style={{ animationDelay: `${index * 50}ms` }}
           >
-            <TaskCard task={task} />
+            <TaskCard task={task} onEdit={onEditTask} onDelete={onDeleteTask} />
           </div>
         ))}
       </div>

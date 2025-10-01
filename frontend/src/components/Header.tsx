@@ -4,9 +4,15 @@ interface HeaderProps {
   title: string;
   subtitle: string;
   textButton: string;
+  onAddClick?: () => void;
 }
 
-export function Header({ title, subtitle, textButton }: HeaderProps) {
+export function Header({
+  title,
+  subtitle,
+  textButton,
+  onAddClick,
+}: HeaderProps) {
   return (
     <header className="flex flex-col md:flex-row items-start md:items-center justify-between mb-10 mt-6 w-5/6 mx-auto gap-6">
       <div className="flex items-center gap-3 sm:gap-4 w-full md:w-auto">
@@ -25,11 +31,12 @@ export function Header({ title, subtitle, textButton }: HeaderProps) {
 
       <div className="w-full md:w-auto">
         <button
+          onClick={onAddClick}
           className="w-full md:w-auto flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-500 
         text-white font-semibold hover:from-blue-600 hover:to-cyan-600 transition-all duration-200 hover:scale-105 shadow-lg hover:shadow-xl cursor-pointer"
         >
           <FiPlus className="w-5 h-5" />
-          
+
           {textButton}
         </button>
       </div>
