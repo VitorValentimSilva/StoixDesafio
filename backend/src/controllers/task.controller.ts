@@ -4,9 +4,13 @@ import { TaskService } from "../service/task.service";
 const taskService = new TaskService();
 
 export class TaskController {
-  async list(_req: Request, res: Response) {
+  async list(req: Request, res: Response) {
     try {
-      const tasks = await taskService.getTasks();
+      const { sort, filter } = req.query;
+      const tasks = await taskService.getTasks(
+        sort as string,
+        filter as string
+      );
 
       res.json(tasks);
     } catch (error) {
