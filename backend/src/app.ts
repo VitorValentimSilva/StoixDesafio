@@ -10,6 +10,7 @@ const app = express();
 const allowedOrigins = [
   "http://localhost:5173",
   "https://stoix-desafio.vercel.app",
+  process.env.API_BASE_URL_PROD,
 ];
 
 app.use(
@@ -38,26 +39,26 @@ app.use(
     secret: sessionSecret,
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: true, sameSite: "none" },
+    cookie: {
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "none",
+    },
   })
 );
 
-const csrfProtection =
-  process.env.NODE_ENV === "production"
-    ? csurf({
-        cookie: {
-          httpOnly: false,
-          secure: true,
-          sameSite: "none",
-        },
-      })
-    : (_req: any, _res: any, next: () => any) => next();
+const csrfProtection = csurf({
+  cookie: {
+    httpOnly: false,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "none",
+  },
+});
 
 app.use(csrfProtection);
 
 app.use((req, res, next) => {
-  const token = req.csrfToken?.();
-  if (token) {
+  if (req.csrfToken) {
+    const token = req.csrfToken();
     res.cookie("XSRF-TOKEN", token, {
       httpOnly: false,
       secure: process.env.NODE_ENV === "production",

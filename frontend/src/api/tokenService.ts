@@ -16,9 +16,9 @@ api.interceptors.request.use(async (config) => {
     let csrfToken = localStorage.getItem("csrfToken");
 
     if (!csrfToken) {
-      const { data } = await api.get<{ csrfToken: string }>("/csrf-token");
+      const { data } = await api.get("/csrf-token");
       csrfToken = data.csrfToken;
-      localStorage.setItem("csrfToken", csrfToken);
+      localStorage.setItem("csrfToken", csrfToken ?? "");
     }
 
     config.headers["X-CSRF-Token"] = csrfToken;
