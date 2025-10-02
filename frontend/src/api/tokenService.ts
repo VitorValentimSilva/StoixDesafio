@@ -7,18 +7,24 @@ const api = axios.create({
   withCredentials: true,
 });
 
+function getCookie(name: string) {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop()?.split(";").shift();
+  return "";
+}
+
 api.interceptors.request.use(async (config) => {
   if (
     config.method === "post" ||
     config.method === "put" ||
     config.method === "delete"
   ) {
-    let csrfToken = localStorage.getItem("csrfToken");
+    let csrfToken = getCookie("XSRF-TOKEN");
 
     if (!csrfToken) {
       const { data } = await api.get("/csrf-token");
       csrfToken = data.csrfToken;
-      localStorage.setItem("csrfToken", csrfToken ?? "");
     }
 
     config.headers["X-CSRF-Token"] = csrfToken;
