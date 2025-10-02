@@ -3,6 +3,11 @@ import { Express } from "express";
 import taskSwagger from "../swagger/task.swagger";
 import csrfSwagger from "../swagger/csrf.swagger";
 
+const API_BASE_URL =
+  process.env.NODE_ENV === "production"
+    ? process.env.API_BASE_URL_PROD
+    : "http://localhost:3000";
+
 const swaggerSpec = {
   openapi: "3.0.0",
   info: {
@@ -10,7 +15,7 @@ const swaggerSpec = {
     version: "1.0.0",
     description: "Desenvolvimento de um Sistema de Gerenciamento de Tarefas",
   },
-  servers: [{ url: "http://localhost:3000" }],
+  servers: [{ url: API_BASE_URL }],
   paths: {
     ...taskSwagger.paths,
     ...csrfSwagger.paths,
