@@ -42,14 +42,34 @@ app.use(
   })
 );
 
-const csrfProtection = csurf({ cookie: true });
+const csrfProtection =
+  process.env.NODE_ENV === "production"
+    ? csurf({
+        cookie: {
+          httpOnly: false,
+          secure: true,
+          sameSite: "none",
+        },
+      })
+    : (_req: any, _res: any, next: () => any) => next();
 
 app.use(csrfProtection);
 
 app.use((req, res, next) => {
-  res.locals.csrfToken = req.csrfToken();
+  const token = req.csrfToken?.();
+  if (token) {
+    res.cookie("XSRF-TOKEN", token, {
+      httpOnly: false,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "none",
+    });
+    res.locals.csrfToken = token;
+  }
   next();
 });
+
+app.use(routes);
+
 app.use((err: any, _req: any, res: any, next: any) => {
   if (err.code === "EBADCSRFTOKEN") {
     return res.status(403).json({
@@ -58,8 +78,6 @@ app.use((err: any, _req: any, res: any, next: any) => {
   }
   next(err);
 });
-
-app.use(routes);
 
 export { csrfProtection };
 export default app;
