@@ -65,9 +65,3 @@ Além dos requisitos obrigatórios, foram desenvolvidos:
 - 💎 **Design responsivo e intuitivo**, focado na experiência do usuário  
 
 ---
-
-## 🖼️ Demonstração
-
-![Preview do Projeto](<img width="1628" height="677" alt="Captura de tela 2025-10-06 180611" src="https://github.com/user-attachments/assets/c7ff706e-47cc-414d-869b-ef91b39652eb" />)
-
----
